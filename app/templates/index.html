@@ -3,715 +3,557 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RAG App — Document Intelligence</title>
+  <title>RAG Mini-Project — NeuroFive</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Base ──────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #0f1117;
-      --surface:    #1a1d27;
-      --surface2:   #22263a;
-      --border:     #2e3347;
-      --accent:     #6c63ff;
-      --accent-h:   #5a52e0;
-      --accent-glow:rgba(108,99,255,0.25);
-      --success:    #22c55e;
-      --error:      #ef4444;
-      --warning:    #f59e0b;
-      --text:       #e8eaf0;
-      --text-muted: #8b90a0;
-      --radius:     12px;
-      --radius-sm:  8px;
-      --shadow:     0 4px 24px rgba(0,0,0,0.4);
+      --bg:         #0d0f0d;
+      --surface:    #131613;
+      --surface2:   #1a1e1a;
+      --border:     #252a25;
+      --green:      #4ade80;
+      --green-d:    #16a34a;
+      --green-bg:   rgba(74,222,128,0.07);
+      --green-glow: rgba(74,222,128,0.2);
+      --text:       #e2ebe2;
+      --muted:      #6b7d6b;
+      --radius:     10px;
     }
 
-    html { font-size: 16px; }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
+    html, body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* ── Nav ───────────────────────────────────────────────────────────── */
+    /* ── TOP NAV ─────────────────────────────── */
     nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 32px;
+      position: sticky; top: 0; z-index: 100;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
+      display: flex; align-items: center;
+      padding: 0 32px; height: 52px; gap: 12px;
     }
 
-    .nav-logo {
-      width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--accent), #a78bfa);
-      border-radius: 8px;
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+    }
+
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+      font-size: 13px; font-weight: 900; color: #000; letter-spacing: -0.5px;
       flex-shrink: 0;
     }
 
-    .nav-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+    .logo-text {
+      font-size: 0.92rem; font-weight: 700; letter-spacing: -0.01em;
     }
 
-    .nav-badge {
+    .logo-text .n5 { color: var(--green); }
+
+    .nav-user {
       margin-left: auto;
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: var(--accent);
-      background: rgba(108,99,255,0.15);
-      border: 1px solid rgba(108,99,255,0.3);
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      display: flex; align-items: center; gap: 9px;
     }
 
-    /* ── Layout ────────────────────────────────────────────────────────── */
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #4ade80, #16a34a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #000;
+    }
+
+    .nav-name { font-size: 0.82rem; font-weight: 600; }
+    .nav-role { font-size: 0.7rem; color: var(--muted); }
+
+    /* ── MAIN ────────────────────────────────── */
     main {
-      flex: 1;
-      max-width: 860px;
-      width: 100%;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 40px 24px 60px;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
+      padding: 36px 24px 72px;
     }
 
-    .hero {
-      text-align: center;
-      padding: 16px 0 8px;
+    /* ── BREADCRUMB ──────────────────────────── */
+    .crumb {
+      font-size: 0.72rem; color: var(--muted);
+      display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
     }
+    .crumb .dot { opacity: 0.4; }
 
-    .hero h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #fff 30%, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    /* ── PAGE HEADER ─────────────────────────── */
+    .page-title {
+      font-size: 1.6rem; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1.25;
       margin-bottom: 10px;
     }
 
-    .hero p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      max-width: 480px;
-      margin: 0 auto;
-      line-height: 1.6;
+    .badge-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.7rem; font-weight: 600; padding: 3px 10px;
+      border-radius: 20px; letter-spacing: 0.03em;
     }
 
-    /* ── Card ──────────────────────────────────────────────────────────── */
+    .badge-warn {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      color: #fbbf24;
+    }
+
+    .badge-week {
+      background: var(--green-bg);
+      border: 1px solid rgba(74,222,128,0.25);
+      color: var(--green);
+    }
+
+    /* ── TASK CARD ───────────────────────────── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 28px 32px;
-      box-shadow: var(--shadow);
-      transition: border-color 0.2s;
-    }
-
-    .card:focus-within { border-color: rgba(108,99,255,0.4); }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 24px 28px;
       margin-bottom: 22px;
     }
 
-    .card-icon {
-      width: 38px; height: 38px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
+    .card-label {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--muted); margin-bottom: 14px;
     }
 
-    .card-icon.purple { background: rgba(108,99,255,0.15); }
-    .card-icon.blue   { background: rgba(59,130,246,0.15); }
-
-    .card-header-text h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+    .task-body {
+      font-size: 0.87rem; color: #a8baa8; line-height: 1.78;
     }
 
-    .card-header-text p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
+    .task-body p { margin-bottom: 12px; }
+
+    .task-body ul {
+      padding-left: 18px; margin-bottom: 12px;
     }
 
-    /* ── Upload Zone ───────────────────────────────────────────────────── */
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-sm);
-      padding: 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
-    }
+    .task-body li { margin-bottom: 7px; }
+    .task-body li::marker { color: var(--green); }
 
-    .upload-zone:hover,
-    .upload-zone.drag-over {
-      border-color: var(--accent);
-      background: rgba(108,99,255,0.05);
-    }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
 
-    .upload-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .upload-zone-icon { font-size: 2rem; margin-bottom: 10px; }
-
-    .upload-zone-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .upload-zone-text span {
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .file-selected {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .tag {
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      margin-top: 14px;
-      font-size: 0.85rem;
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 0.7rem; color: var(--muted);
     }
 
-    .file-selected-icon { font-size: 1.2rem; }
-    .file-selected-name { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .file-selected-size { color: var(--text-muted); font-size: 0.75rem; }
+    .tag.g {
+      border-color: rgba(74,222,128,0.28);
+      color: var(--green); background: var(--green-bg);
+    }
 
-    /* ── Buttons ───────────────────────────────────────────────────────── */
+    /* ── DIVIDER ─────────────────────────────── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--muted); font-size: 0.72rem; margin: 28px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── TWO COL ─────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── PANEL ───────────────────────────────── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+    }
+
+    .panel-head {
+      display: flex; align-items: center;
+      gap: 10px; margin-bottom: 16px;
+    }
+
+    .panel-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--green-bg);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex-shrink: 0;
+    }
+
+    .panel-title { font-size: 0.88rem; font-weight: 600; }
+    .panel-sub   { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── UPLOAD ZONE ─────────────────────────── */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 8px; padding: 26px 16px;
+      text-align: center; cursor: pointer;
+      position: relative; transition: all 0.18s;
+      margin-bottom: 12px;
+    }
+    .drop-zone:hover, .drop-zone.over {
+      border-color: var(--green); background: var(--green-bg);
+    }
+    .drop-zone input {
+      position: absolute; inset: 0; opacity: 0;
+      cursor: pointer; width: 100%; height: 100%;
+    }
+    .dz-icon { font-size: 1.7rem; margin-bottom: 6px; }
+    .dz-text { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .dz-text span { color: var(--green); font-weight: 500; }
+
+    .file-pill {
+      display: none; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 7px 12px;
+      font-size: 0.78rem; margin-bottom: 12px;
+    }
+    .file-pill.show { display: flex; }
+    .fp-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+    .fp-size { color: var(--muted); font-size: 0.7rem; }
+
+    /* ── BUTTON ──────────────────────────────── */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 11px 22px;
-      border-radius: var(--radius-sm);
-      border: none;
-      cursor: pointer;
-      transition: all 0.18s;
-      letter-spacing: -0.01em;
+      display: inline-flex; align-items: center;
+      justify-content: center; gap: 7px;
+      font-family: inherit; font-size: 0.82rem; font-weight: 600;
+      padding: 9px 18px; border-radius: 7px;
+      border: none; cursor: pointer;
+      transition: all 0.17s; width: 100%;
     }
-
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 0 0 var(--accent-glow);
-    }
-
-    .btn-primary:not(:disabled):hover {
-      background: var(--accent-h);
-      box-shadow: 0 0 20px var(--accent-glow);
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-g { background: var(--green); color: #000; }
+    .btn-g:not(:disabled):hover {
+      background: #22c55e;
+      box-shadow: 0 0 18px var(--green-glow);
       transform: translateY(-1px);
     }
+    .btn-sm { width: auto; }
 
-    .btn-primary:not(:disabled):active { transform: translateY(0); }
-
-    .btn-full { width: 100%; margin-top: 16px; }
-
-    /* ── Input ─────────────────────────────────────────────────────────── */
-    .input-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .input-wrap {
-      flex: 1;
-      position: relative;
-    }
-
-    .input-wrap input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.9rem;
-      padding: 11px 14px;
-      outline: none;
+    /* ── INPUT ───────────────────────────────── */
+    .ask-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .ask-row input {
+      flex: 1; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 7px;
+      color: var(--text); font-family: inherit;
+      font-size: 0.82rem; padding: 9px 12px; outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-
-    .input-wrap input::placeholder { color: var(--text-muted); }
-
-    .input-wrap input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+    .ask-row input::placeholder { color: var(--muted); }
+    .ask-row input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-bg);
     }
+    .ask-row .btn { width: auto; padding: 9px 20px; }
 
-    /* ── Progress bar ──────────────────────────────────────────────────── */
-    .progress-wrap {
-      height: 4px;
-      background: var(--surface2);
-      border-radius: 2px;
-      overflow: hidden;
-      margin-top: 14px;
-      display: none;
+    /* ── PROGRESS BAR ────────────────────────── */
+    .prog { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin: 10px 0; display: none; }
+    .prog.show { display: block; }
+    .prog-inner { height: 100%; background: linear-gradient(90deg, var(--green), #86efac); width: 40%; animation: sweep 1.1s ease-in-out infinite; }
+    @keyframes sweep { 0% { transform: translateX(-150%); } 100% { transform: translateX(400%); } }
+
+    /* ── STATUS MESSAGES ─────────────────────── */
+    .st {
+      display: none; align-items: flex-start; gap: 8px;
+      padding: 10px 12px; border-radius: 7px;
+      font-size: 0.79rem; line-height: 1.55; margin-top: 10px;
     }
+    .st.show { display: flex; }
+    .st.ok  { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.22); color: #86efac; }
+    .st.err { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.22);  color: #fca5a5; }
 
-    .progress-wrap.visible { display: block; }
+    /* ── ANSWER ──────────────────────────────── */
+    .answer-wrap { display: none; margin-top: 14px; }
+    .answer-wrap.show { display: block; }
 
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), #a78bfa);
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-
-    .progress-bar.indeterminate {
-      width: 40%;
-      animation: indeterminate 1.2s ease-in-out infinite;
-    }
-
-    @keyframes indeterminate {
-      0%   { transform: translateX(-100%); }
-      100% { transform: translateX(350%); }
-    }
-
-    /* ── Status messages ───────────────────────────────────────────────── */
-    .status {
-      display: none;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      line-height: 1.5;
-      margin-top: 14px;
-    }
-
-    .status.visible { display: flex; }
-    .status-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-
-    .status.success { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.3);  color: #86efac; }
-    .status.error   { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
-    .status.info    { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
-
-    /* ── Answer box ────────────────────────────────────────────────────── */
     .answer-box {
-      display: none;
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 18px 20px;
-      margin-top: 18px;
-      font-size: 0.9rem;
-      line-height: 1.75;
-      white-space: pre-wrap;
-      word-break: break-word;
+      border-top: 2px solid var(--green);
+      border-radius: 0 0 8px 8px;
+      padding: 16px 18px;
+      font-size: 0.85rem; line-height: 1.8;
+      white-space: pre-wrap; word-break: break-word;
     }
-
-    .answer-box.visible { display: block; }
 
     .answer-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin-bottom: 10px;
+      background: var(--green);
+      color: #000; font-size: 0.65rem;
+      font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 4px 12px;
+      border-radius: 6px 6px 0 0; display: inline-block;
     }
 
-    /* ── Sources ───────────────────────────────────────────────────────── */
-    .sources-wrap {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 14px;
+    /* ── SOURCES ─────────────────────────────── */
+    .sources-wrap { display: none; margin-top: 14px; }
+    .sources-wrap.show { display: block; }
+    .src-label {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--muted); margin-bottom: 8px;
     }
-
-    .sources-wrap.visible { display: flex; }
-
-    .sources-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-    }
-
-    .source-chip {
+    .src-item {
       background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .source-chip::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: linear-gradient(180deg, var(--accent), #a78bfa);
-      border-radius: 2px 0 0 2px;
-    }
-
-    .source-num {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    /* ── Spinner ───────────────────────────────────────────────────────── */
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Divider ───────────────────────────────────────────────────────── */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-    }
-
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ── Footer ────────────────────────────────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--text-muted);
-      font-size: 0.75rem;
+      border-left: 3px solid var(--green);
       border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0 7px 7px 0;
+      padding: 10px 14px;
+      font-size: 0.78rem; color: var(--muted);
+      line-height: 1.65; margin-bottom: 8px;
+    }
+    .src-num {
+      font-size: 0.64rem; font-weight: 700;
+      color: var(--green); text-transform: uppercase;
+      letter-spacing: 0.07em; margin-bottom: 4px;
     }
 
-    /* ── Responsive ────────────────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      nav { padding: 14px 18px; }
-      main { padding: 24px 16px 48px; }
-      .card { padding: 20px 18px; }
-      .hero h1 { font-size: 1.5rem; }
-      .input-row { flex-direction: column; }
-      .upload-zone { padding: 24px 16px; }
+    /* ── SPINNER ─────────────────────────────── */
+    .spin {
+      width: 13px; height: 13px;
+      border: 2px solid rgba(0,0,0,0.25);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: rot 0.65s linear infinite;
     }
+    @keyframes rot { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ──────────────────────────────── */
+    footer {
+      text-align: center; padding: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.72rem;
+    }
+    footer span { color: var(--green); }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav>
-    <div class="nav-logo">🧠</div>
-    <span class="nav-title">RAG Intelligence</span>
-    <span class="nav-badge">Beta</span>
-  </nav>
-
-  <!-- Main -->
-  <main>
-
-    <!-- Hero -->
-    <div class="hero">
-      <h1>Document Intelligence</h1>
-      <p>Upload your PDF documents and ask questions. Powered by semantic search and Claude AI.</p>
+<!-- ── NAV ── -->
+<nav>
+  <div class="logo">
+    <div class="logo-mark">N5</div>
+    <span class="logo-text"><span class="n5">NeuroFive</span> Solutions</span>
+  </div>
+  <div class="nav-user">
+    <div class="avatar">HA</div>
+    <div>
+      <div class="nav-name">Haider Ali</div>
+      <div class="nav-role">Generative AI Intern</div>
     </div>
+  </div>
+</nav>
 
-    <!-- Upload Card -->
-    <div class="card" id="upload-card">
-      <div class="card-header">
-        <div class="card-icon purple">📄</div>
-        <div class="card-header-text">
-          <h2>Upload Document</h2>
-          <p>PDF files up to 16 MB</p>
+<!-- ── MAIN ── -->
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="crumb">
+    <span>Week 3</span>
+    <span class="dot">·</span>
+    <span>Generative AI &amp; Prompt Engineering</span>
+  </div>
+
+  <!-- Title + badges -->
+  <h1 class="page-title">RAG Mini-Project — Chat With Your Own Document</h1>
+  <div class="badge-row">
+    <span class="badge badge-warn">⚠ Not Submitted</span>
+    <span class="badge badge-week">Week 3</span>
+  </div>
+
+  <!-- Task Description -->
+  <div class="card">
+    <div class="card-label">Task Description</div>
+    <div class="task-body">
+      <p>LMs don't know your private data — that's where Retrieval-Augmented Generation (RAG) comes in. It's the technique behind almost every "chat with your PDF" tool you've seen. You'll build a small pipeline that lets an AI answer questions using a document you give it, instead of guessing from its training data.</p>
+      <p>Tech/Concepts covered: RAG (Retrieval-Augmented Generation), embeddings, vector search, chunking, tools like LangChain, LlamaIndex, or a no-code option (NotebookLM / Claude Projects / custom GPTs) if coding is too heavy for this stage.</p>
+      <ul>
+        <li>Pick a document (a PDF report, your resume, or class notes — 3–10 pages is fine)</li>
+        <li>Choose your approach: code it with LangChain/LlamaIndex + embeddings, OR use a no-code tool like NotebookLM, Claude Projects, or a custom GPT with file upload</li>
+        <li>Make it answer at least 3 meaningful questions from the document</li>
+        <li>Submit a short demo (screenshot or screen recording) showing it working</li>
+      </ul>
+    </div>
+    <div class="tags">
+      <span class="tag g">RAG</span>
+      <span class="tag g">Gemini API</span>
+      <span class="tag g">pgvector</span>
+      <span class="tag">Flask</span>
+      <span class="tag">Embeddings</span>
+      <span class="tag">Vector Search</span>
+      <span class="tag">Python</span>
+      <span class="tag">PostgreSQL</span>
+    </div>
+  </div>
+
+  <div class="divider">Try it live</div>
+
+  <!-- Upload + Ask -->
+  <div class="two-col">
+
+    <!-- Upload -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon">📄</div>
+        <div>
+          <div class="panel-title">Upload Document</div>
+          <div class="panel-sub">PDF only · max 16 MB</div>
         </div>
       </div>
 
-      <div class="upload-zone" id="upload-zone">
-        <input type="file" id="pdf-input" accept=".pdf" aria-label="Select PDF file" />
-        <div class="upload-zone-icon">☁️</div>
-        <div class="upload-zone-text">
-          <span>Click to browse</span> or drag and drop<br />
-          PDF files only
-        </div>
+      <div class="drop-zone" id="dz">
+        <input type="file" id="pdf-in" accept=".pdf" />
+        <div class="dz-icon">☁️</div>
+        <div class="dz-text"><span>Click to browse</span> or drag &amp; drop</div>
       </div>
 
-      <div class="file-selected" id="file-info" style="display:none">
-        <span class="file-selected-icon">📎</span>
-        <span class="file-selected-name" id="file-name">—</span>
-        <span class="file-selected-size" id="file-size">—</span>
+      <div class="file-pill" id="fp">
+        <span>📎</span>
+        <span class="fp-name" id="fp-name"></span>
+        <span class="fp-size" id="fp-size"></span>
       </div>
 
-      <div class="progress-wrap" id="upload-progress">
-        <div class="progress-bar indeterminate" id="upload-bar"></div>
-      </div>
+      <div class="prog" id="up-p"><div class="prog-inner"></div></div>
+      <div class="st" id="up-s"><span id="up-ic"></span>&nbsp;<span id="up-m"></span></div>
 
-      <div class="status" id="upload-status">
-        <span class="status-icon" id="upload-icon"></span>
-        <span id="upload-msg"></span>
-      </div>
-
-      <button class="btn btn-primary btn-full" id="upload-btn" onclick="uploadPDF()" disabled>
+      <button class="btn btn-g" id="up-btn" onclick="doUpload()" disabled style="margin-top:4px;">
         Upload &amp; Ingest
       </button>
     </div>
 
-    <div class="divider">or ask about already-uploaded documents</div>
-
-    <!-- Query Card -->
-    <div class="card" id="query-card">
-      <div class="card-header">
-        <div class="card-icon blue">💬</div>
-        <div class="card-header-text">
-          <h2>Ask a Question</h2>
-          <p>Semantic search + Claude AI answer generation</p>
+    <!-- Ask -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon">💬</div>
+        <div>
+          <div class="panel-title">Ask a Question</div>
+          <div class="panel-sub">Semantic search + Gemini generation</div>
         </div>
       </div>
 
-      <div class="input-row">
-        <div class="input-wrap">
-          <input
-            type="text"
-            id="question-input"
-            placeholder="e.g. What are the key skills listed?"
-            onkeydown="if(event.key==='Enter') askQuestion()"
-            aria-label="Question input"
-          />
-        </div>
-        <button class="btn btn-primary" id="ask-btn" onclick="askQuestion()">
-          Ask
-        </button>
+      <div class="ask-row">
+        <input type="text" id="q-in" placeholder="e.g. What are the top skills listed?"
+          onkeydown="if(event.key==='Enter') doAsk()" />
+        <button class="btn btn-g btn-sm" id="ask-btn" onclick="doAsk()">Ask</button>
       </div>
 
-      <div class="status" id="ask-status">
-        <span class="status-icon" id="ask-icon"></span>
-        <span id="ask-msg"></span>
-      </div>
+      <div class="prog" id="ask-p"><div class="prog-inner"></div></div>
+      <div class="st" id="ask-s"><span id="ask-ic"></span>&nbsp;<span id="ask-m"></span></div>
 
-      <div class="answer-box" id="answer-box">
+      <!-- Answer -->
+      <div class="answer-wrap" id="ans-wrap">
         <div class="answer-label">Answer</div>
-        <div id="answer-text"></div>
+        <div class="answer-box" id="ans-text"></div>
       </div>
 
-      <div class="sources-wrap" id="sources-wrap">
-        <div class="sources-label">Sources</div>
-        <div id="sources-list"></div>
+      <!-- Sources / Chunks -->
+      <div class="sources-wrap" id="src-wrap">
+        <div class="src-label" style="margin-top:16px;">Retrieved Chunks</div>
+        <div id="src-list"></div>
       </div>
     </div>
 
-  </main>
+  </div><!-- end two-col -->
 
-  <footer>RAG Intelligence &mdash; Built with Flask, pgvector &amp; Claude</footer>
+</main>
 
-  <script>
-    /* ── File selection ─────────────────────────────────────────────── */
-    const pdfInput   = document.getElementById('pdf-input');
-    const fileInfo   = document.getElementById('file-info');
-    const fileName   = document.getElementById('file-name');
-    const fileSize   = document.getElementById('file-size');
-    const uploadBtn  = document.getElementById('upload-btn');
-    const uploadZone = document.getElementById('upload-zone');
+<footer>Built for <span>NeuroFive Solutions</span> Internship · Week 3 · RAG Mini-Project</footer>
 
-    pdfInput.addEventListener('change', () => {
-      const file = pdfInput.files[0];
-      if (!file) return;
-      fileName.textContent = file.name;
-      fileSize.textContent = formatBytes(file.size);
-      fileInfo.style.display = 'flex';
-      uploadBtn.disabled = false;
-      hideStatus('upload');
-    });
+<script>
+  const pdfIn  = document.getElementById('pdf-in');
+  const fp     = document.getElementById('fp');
+  const upBtn  = document.getElementById('up-btn');
+  const dz     = document.getElementById('dz');
 
-    // Drag & drop
-    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-    uploadZone.addEventListener('drop', e => {
-      e.preventDefault();
-      uploadZone.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type === 'application/pdf') {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        pdfInput.files = dt.files;
-        pdfInput.dispatchEvent(new Event('change'));
-      } else {
-        showStatus('upload', 'error', '⚠️', 'Only PDF files are accepted.');
-      }
-    });
+  /* ── File select ── */
+  pdfIn.addEventListener('change', () => {
+    const f = pdfIn.files[0]; if (!f) return;
+    document.getElementById('fp-name').textContent = f.name;
+    document.getElementById('fp-size').textContent = fmtB(f.size);
+    fp.classList.add('show'); upBtn.disabled = false; clearSt('up');
+  });
 
-    /* ── Upload ─────────────────────────────────────────────────────── */
-    async function uploadPDF() {
-      if (!pdfInput.files.length) return;
-      const file = pdfInput.files[0];
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type === 'application/pdf') {
+      const dt = new DataTransfer(); dt.items.add(f);
+      pdfIn.files = dt.files; pdfIn.dispatchEvent(new Event('change'));
+    } else { setSt('up','err','❌','Only PDF files are accepted.'); }
+  });
 
-      uploadBtn.disabled = true;
-      uploadBtn.innerHTML = '<div class="spinner"></div> Processing…';
-      showProgress('upload');
-      hideStatus('upload');
+  /* ── Upload ── */
+  async function doUpload() {
+    if (!pdfIn.files.length) return;
+    upBtn.disabled = true; upBtn.innerHTML = '<div class="spin"></div> Processing…';
+    showEl('up-p'); clearSt('up');
+    try {
+      const fd = new FormData(); fd.append('file', pdfIn.files[0]);
+      const r = await fetch('/upload', { method:'POST', body:fd });
+      const d = await r.json();
+      if (r.ok) {
+        setSt('up','ok','✅', `"${d.document.filename}" ingested — ${d.document.chunk_count} chunks stored.`);
+        pdfIn.value=''; fp.classList.remove('show'); upBtn.disabled=true;
+      } else { setSt('up','err','❌', d.error||'Upload failed.'); upBtn.disabled=false; }
+    } catch(e) { setSt('up','err','❌','Network error: '+e.message); upBtn.disabled=false; }
+    finally { upBtn.innerHTML='Upload &amp; Ingest'; hideEl('up-p'); }
+  }
 
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const res = await fetch('/upload', { method: 'POST', body: formData });
-        const data = await res.json();
-
-        if (res.ok) {
-          showStatus('upload', 'success', '✅',
-            `"${data.document.filename}" ingested — ${data.document.chunk_count} chunks stored.`);
-          // Reset
-          pdfInput.value = '';
-          fileInfo.style.display = 'none';
-          uploadBtn.disabled = true;
-        } else {
-          showStatus('upload', 'error', '❌', data.error || 'Upload failed.');
-          uploadBtn.disabled = false;
+  /* ── Ask ── */
+  async function doAsk() {
+    const q = document.getElementById('q-in').value.trim();
+    if (!q) { setSt('ask','err','⚠️','Please enter a question.'); return; }
+    const btn = document.getElementById('ask-btn');
+    btn.disabled=true; btn.innerHTML='<div class="spin"></div>';
+    clearSt('ask'); hideEl('ans-wrap'); hideEl('src-wrap'); showEl('ask-p');
+    try {
+      const r = await fetch('/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+      const d = await r.json();
+      if (r.ok) {
+        document.getElementById('ans-text').textContent = d.answer;
+        showEl('ans-wrap');
+        if (d.sources && d.sources.length) {
+          document.getElementById('src-list').innerHTML = d.sources.map((s,i)=>`
+            <div class="src-item">
+              <div class="src-num">Chunk ${i+1} &nbsp;·&nbsp; Index #${s.chunk_index}</div>
+              ${esc(s.content.slice(0,280))}${s.content.length>280?'…':''}
+            </div>`).join('');
+          showEl('src-wrap');
         }
-      } catch (err) {
-        showStatus('upload', 'error', '❌', `Network error: ${err.message}`);
-        uploadBtn.disabled = false;
-      } finally {
-        uploadBtn.innerHTML = 'Upload &amp; Ingest';
-        hideProgress('upload');
-      }
-    }
+      } else { setSt('ask','err','❌', d.error||'Query failed.'); }
+    } catch(e) { setSt('ask','err','❌','Network error: '+e.message); }
+    finally { btn.disabled=false; btn.innerHTML='Ask'; hideEl('ask-p'); }
+  }
 
-    /* ── Ask ────────────────────────────────────────────────────────── */
-    async function askQuestion() {
-      const question = document.getElementById('question-input').value.trim();
-      if (!question) {
-        showStatus('ask', 'error', '⚠️', 'Please enter a question first.');
-        return;
-      }
-
-      const askBtn = document.getElementById('ask-btn');
-      askBtn.disabled = true;
-      askBtn.innerHTML = '<div class="spinner"></div>';
-      hideStatus('ask');
-      document.getElementById('answer-box').classList.remove('visible');
-      document.getElementById('sources-wrap').classList.remove('visible');
-
-      try {
-        const res = await fetch('/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question }),
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          // Show answer
-          document.getElementById('answer-text').textContent = data.answer;
-          document.getElementById('answer-box').classList.add('visible');
-
-          // Show sources
-          if (data.sources && data.sources.length) {
-            const list = document.getElementById('sources-list');
-            list.innerHTML = data.sources.map((s, i) => `
-              <div class="source-chip">
-                <div class="source-num">Source ${i + 1} · Chunk #${s.chunk_index}</div>
-                ${escapeHtml(s.content.slice(0, 260))}${s.content.length > 260 ? '…' : ''}
-              </div>`).join('');
-            document.getElementById('sources-wrap').classList.add('visible');
-          }
-        } else {
-          showStatus('ask', 'error', '❌', data.error || 'Query failed.');
-        }
-      } catch (err) {
-        showStatus('ask', 'error', '❌', `Network error: ${err.message}`);
-      } finally {
-        askBtn.disabled = false;
-        askBtn.innerHTML = 'Ask';
-      }
-    }
-
-    /* ── Helpers ────────────────────────────────────────────────────── */
-    function showStatus(scope, type, icon, msg) {
-      const el   = document.getElementById(`${scope}-status`);
-      const ico  = document.getElementById(`${scope}-icon`);
-      const msgEl = document.getElementById(`${scope}-msg`);
-      el.className = `status ${type} visible`;
-      ico.textContent = icon;
-      msgEl.textContent = msg;
-    }
-
-    function hideStatus(scope) {
-      document.getElementById(`${scope}-status`).classList.remove('visible');
-    }
-
-    function showProgress(scope) {
-      document.getElementById(`${scope}-progress`).classList.add('visible');
-    }
-
-    function hideProgress(scope) {
-      document.getElementById(`${scope}-progress`).classList.remove('visible');
-    }
-
-    function formatBytes(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    }
-
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-  </script>
+  /* ── Helpers ── */
+  function setSt(s,t,ic,msg){
+    const el=document.getElementById(s+'-s');
+    el.className='st '+t+' show';
+    document.getElementById(s+'-ic').textContent=ic;
+    document.getElementById(s+'-m').textContent=msg;
+  }
+  function clearSt(s){ document.getElementById(s+'-s').classList.remove('show'); }
+  function showEl(id){ document.getElementById(id).classList.add('show'); }
+  function hideEl(id){ document.getElementById(id).classList.remove('show'); }
+  function fmtB(b){ return b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB'; }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
 </body>
 </html>
